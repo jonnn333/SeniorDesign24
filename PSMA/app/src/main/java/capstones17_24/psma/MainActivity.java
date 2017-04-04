@@ -26,7 +26,7 @@ import android.content.pm.PackageManager;
 import android.support.v4.content.ContextCompat;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,25 +37,57 @@ public class MainActivity extends AppCompatActivity {
         StrictMode.setThreadPolicy(policy);
 
         setContentView(R.layout.activity_main);
-
-    // Example of a call to a native method
-    //TextView tv = (TextView) findViewById(R.id.sample_text);
-    //tv.setText(stringFromJNI());
+        // Example of a call to a native method
+        //TextView tv = (TextView) findViewById(R.id.sample_text);
+        //tv.setText(stringFromJNI());
 
         Button clickButton = (Button) findViewById(R.id.LoginButton);
-        clickButton.setOnClickListener( new View.OnClickListener() {
+        clickButton.setOnClickListener(this);
+        Button clickAbout = (Button) findViewById(R.id.AboutClick);
+        clickAbout.setOnClickListener(this);
+        Button clickFAQs = (Button) findViewById(R.id.FAQS_Click);
+        clickFAQs.setOnClickListener(this);
+        Button clickTerms = (Button) findViewById(R.id.TermsClick);
+        clickTerms.setOnClickListener(this);
+        Button clickHelp = (Button) findViewById(R.id.HelpClick);
+        clickHelp.setOnClickListener(this);
 
-            @Override
-            public void onClick(View v) {
+    }
+
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.LoginButton: {
                 Connection mainFunction = new Connection();
-                try {
-                    mainFunction.main();
+                /*try {
+                    mainFunction.execute();
                 } catch (IOException e) {
                     e.printStackTrace();
-                }
+                }*/
+                Toast.makeText(this, "Attempting to connect...", Toast.LENGTH_SHORT).show();
+                mainFunction.execute();
+                break;
             }
-        });
-
+            case R.id.AboutClick: {
+                // go to About Us activity
+                Toast.makeText(this, "You clicked the 'About Us' button", Toast.LENGTH_SHORT).show();
+                break;
+            }
+            case R.id.FAQS_Click: {
+                // go to FAQs page
+                Toast.makeText(this, "You clicked the 'FAQs' button", Toast.LENGTH_SHORT).show();
+                break;
+            }
+            case R.id.TermsClick: {
+                // go to Terms and Conditions page
+                Toast.makeText(this, "You clicked the 'Terms and Conditions' button", Toast.LENGTH_SHORT).show();
+                break;
+            }
+            case R.id.HelpClick: {
+                // go to Help Page
+                Toast.makeText(this, "You clicked the 'Help' button", Toast.LENGTH_SHORT).show();
+                break;
+            }
+        }
 
     }
 
