@@ -10,17 +10,18 @@
 
     <!--
         TODO: 4/3/17, 4:37pm EDT
-        (done) 1) change font of title - script is weird, yo
-        2) add activity to record the voice
-        3) remove login/create account and directly access feature
-        4) add voice recording capabilities and persistence princ
-        4.1) save as sound file, but test with message first)
-        5) integrate with MATLAB using TCP/IP sockets, Chall(FTP client)
-        6) debug and refine
-        7) app permissions
-        8) refine layout/aesthetics and such
-        9) debug and refine
-        10) prep for presentation (unrelated to app design)
+        (done)
+        x 1) change font of title - script is weird, yo
+          2) add activity to record the voice
+        x 3) remove login/create account and directly access feature
+          4) add voice recording capabilities and persistence princ
+          4.1) save as sound file, but test with message first)
+          5) integrate with MATLAB using TCP/IP sockets, Chall(FTP client)
+          6) debug and refine
+        x 7) app permissions
+          8) refine layout/aesthetics and such
+          9) debug and refine
+          10) prep for presentation (unrelated to app design)
 
         -->
     <TextView
