@@ -3,7 +3,10 @@ package capstones17_24.psma;
 import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -15,6 +18,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Random;
 import static android.Manifest.permission.RECORD_AUDIO;
@@ -25,8 +29,15 @@ import android.support.v4.app.ActivityCompat;
 import android.content.pm.PackageManager;
 import android.support.v4.content.ContextCompat;
 
+import org.w3c.dom.Text;
+
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+
+
+    MediaRecorder myAudioRecorder = new MediaRecorder();
+    private EditText clientIP_editText;
+    public static String IP_Address;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +52,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //TextView tv = (TextView) findViewById(R.id.sample_text);
         //tv.setText(stringFromJNI());
 
+        // editText field for entering IP Address
+        clientIP_editText = (EditText) findViewById(R.id.editTextIP);
+        //set listeners
+        clientIP_editText.addTextChangedListener(textWatcher);
+        // run once to disable if empty
+        checkFieldsForEmptyValues();
+
         Button clickButton = (Button) findViewById(R.id.LoginButton);
         clickButton.setOnClickListener(this);
         Button clickAbout = (Button) findViewById(R.id.AboutClick);
@@ -51,7 +69,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         clickTerms.setOnClickListener(this);
         Button clickHelp = (Button) findViewById(R.id.HelpClick);
         clickHelp.setOnClickListener(this);
-
+/*      NOTE: Using AudioRecord, and attempting to save as WAV file. See group chat 4/5/17
+        myAudioRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+        myAudioRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
+        myAudioRecorder.setAudioEncoder(MediaRecorder.OutputFormat.AMR_NB);
+        myAudioRecorder.setOutputFile("SampleFile.mp4");
+        try {
+            myAudioRecorder.prepare();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }*/
     }
 
     public void onClick(View v) {
@@ -64,7 +91,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     e.printStackTrace();
                 }*/
                 Toast.makeText(this, "Attempting to connect...", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(this, "Recording Cough", Toast.LENGTH_SHORT).show();
+                //myAudioRecorder.start();
+
                 mainFunction.execute();
+
                 break;
             }
             case R.id.AboutClick: {
@@ -98,10 +129,44 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 */
 
+   // http://stackoverflow.com/questions/20682865/disable-button-when-edit-text-fields-empty
     public void CreateAccountClick(View v) {
         Toast.makeText(this, "Clicked on the Account Creation Button!", Toast.LENGTH_LONG).show();
     }
 
+    //TextWatcher
+    private TextWatcher textWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3)
+        {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence charSequence, int i, int i2, int i3) {
+            checkFieldsForEmptyValues();
+        }
+
+        @Override
+        public void afterTextChanged(Editable editable) {
+        }
+    };
+
+    private  void checkFieldsForEmptyValues(){
+        Button b = (Button) findViewById(R.id.LoginButton);
+
+        IP_Address =  clientIP_editText.getText().toString();
+
+        if(IP_Address.equals(""))
+        {
+            b.setEnabled(false);
+        }
+
+        else if(!IP_Address.equals("")){
+            b.setEnabled(true);
+        }
+    }
+//--------------------------------------------------------------------------------------------
 
 
     /**
