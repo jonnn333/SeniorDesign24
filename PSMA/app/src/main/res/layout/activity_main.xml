@@ -10,17 +10,19 @@
 
     <!--
         TODO: 4/3/17, 4:37pm EDT
-        (done) 1) change font of title - script is weird, yo
-        2) add activity to record the voice
-        (done) 3) remove login/create account and directly access feature
-        4) add voice recording capabilities and persistence principles
-        4.1) save as sound file, but test with message first)
-        5) integrate with MATLAB using TCP/IP sockets, Chall(FTP client)
-        6) debug and refine
-        (done) 7) app permissions
-        8) refine layout/aesthetics and such
-        9) debug and refine
-        10) prep for presentation (unrelated to app design)
+        TODO: Tackling addl todo's in this list as well as in Meeting Minutes 4/10/17
+        - add activity to record the voice
+        - add voice recording capabilities and persistence principles
+        - save as sound file, but test with message first)
+        - debug and refine
+        - app permissions, re-check
+        - refine layout/aesthetics and such
+        - debug and refine
+
+        (done) change font of title - script is weird, yo
+        (done) remove login/create account and directly access feature
+        (done) integrate with MATLAB using TCP/IP sockets, Chall(FTP client)
+        (done) prep for presentation (unrelated to app design)
 
         -->
     <TextView
@@ -61,6 +63,19 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:onClick="LoginClick"
+        />
+
+    <Button
+        android:layout_width="225dp"
+        android:layout_height="50dp"
+        android:text="Record my Cough"
+        android:id="@+id/IwantRecord"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:onClick="wantRecord"
+        app:layout_constraintVertical_bias="0.6"
         />
 
     <!--

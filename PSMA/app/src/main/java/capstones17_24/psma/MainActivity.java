@@ -1,5 +1,8 @@
 package capstones17_24.psma;
 
+import android.content.Intent;
+import android.media.AudioFormat;
+import android.media.AudioRecord;
 import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -23,6 +26,7 @@ import java.io.IOException;
 import java.util.Random;
 import static android.Manifest.permission.RECORD_AUDIO;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
+import static android.provider.AlarmClock.EXTRA_MESSAGE;
 import static capstones17_24.psma.Connection.*;
 
 import android.support.v4.app.ActivityCompat;
@@ -34,15 +38,27 @@ import org.w3c.dom.Text;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
+    // no longer using MediaRecorder
+    //MediaRecorder myAudioRecorder = new MediaRecorder();
 
-    MediaRecorder myAudioRecorder = new MediaRecorder();
+    // 4/12/17, 1pm EDT -- attemtping to get app to record audio...LIKE A BOSS
+    // NOW: using AudioRecord built-in Android thing-a-ma-jig
+    // source: http://stackoverflow.com/questions/8499042/android-audiorecord-example
+    /*
+    NOTE: for the above, this is set up in RecordVoice Activity, will user will
+    be taken to when he/she clicks on the button that says to "Record my Cough"
+     */
+
+    // this is for connecting to the client
+    // - EditText holds IP that app user enters
+    // - String holds actual IP address to send when "connect to client" button is tapped/clicked
     private EditText clientIP_editText;
     public static String IP_Address;
 
+    // we always need this to start the app given the fact that it is an activity screen
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
 
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
@@ -69,6 +85,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         clickTerms.setOnClickListener(this);
         Button clickHelp = (Button) findViewById(R.id.HelpClick);
         clickHelp.setOnClickListener(this);
+
+        // request recording activity screen
+        Button wantRecord = (Button) findViewById(R.id.IwantRecord);
+        wantRecord.setOnClickListener(this);
+
 /*      NOTE: Using AudioRecord, and attempting to save as WAV file. See group chat 4/5/17
         myAudioRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
         myAudioRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
@@ -81,6 +102,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }*/
     }
 
+    //----------------------------------------------------------------------------------------
+    // Functions that are called for related UI interaction between app and user
+    //----------------------------------------------------------------------------------------
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.LoginButton: {
@@ -116,6 +140,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.HelpClick: {
                 // go to Help Page
                 Toast.makeText(this, "You clicked the 'Help' button", Toast.LENGTH_SHORT).show();
+                break;
+            }
+            case R.id.IwantRecord: {
+                // go to the RecordVoice Activity screen
+                Toast.makeText(this, "Changing to recording screen...", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(this, RecordVoice.class);
+                //EditText editText = (EditText) findViewById(R.id.editText);
+                //String message = editText.getText().toString();
+                //intent.putExtra(EXTRA_MESSAGE, message);
+                startActivity(intent);
+
                 break;
             }
         }
