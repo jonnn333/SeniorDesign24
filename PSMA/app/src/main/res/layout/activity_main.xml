@@ -8,23 +8,6 @@
     tools:context="capstones17_24.psma.MainActivity"
     android:id="@+id/constraintLayout">
 
-    <!--
-        TODO: 4/3/17, 4:37pm EDT
-        TODO: Tackling addl todo's in this list as well as in Meeting Minutes 4/10/17
-        - add activity to record the voice
-        - add voice recording capabilities and persistence principles
-        - save as sound file, but test with message first)
-        - debug and refine
-        - app permissions, re-check
-        - refine layout/aesthetics and such
-        - debug and refine
-
-        (done) change font of title - script is weird, yo
-        (done) remove login/create account and directly access feature
-        (done) integrate with MATLAB using TCP/IP sockets, Chall(FTP client)
-        (done) prep for presentation (unrelated to app design)
-
-        -->
     <TextView
         android:id="@+id/sample_text"
         android:layout_width="wrap_content"

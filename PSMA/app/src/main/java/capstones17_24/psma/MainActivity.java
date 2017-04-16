@@ -52,6 +52,25 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     // this is for connecting to the client
     // - EditText holds IP that app user enters
     // - String holds actual IP address to send when "connect to client" button is tapped/clicked
+
+
+     /*
+    TODO: 4/3/17, 4:37pm EDT
+    TODO: Tackling addl todo's in this list as well as in Meeting Minutes 4/10/17
+            - add activity to record the voice
+        - add voice recording capabilities and persistence principles
+        - save as sound file, but test with message first)
+            - debug and refine
+        - app permissions, re-check
+        - refine layout/aesthetics and such
+        - debug and refine
+
+            (done) change font of title - script is weird, yo
+            (done) remove login/create account and directly access feature
+            (done) integrate with MATLAB using TCP/IP sockets, Chall(FTP client)
+            (done) prep for presentation (unrelated to app design)
+    */
+
     private EditText clientIP_editText;
     public static String IP_Address;
 
