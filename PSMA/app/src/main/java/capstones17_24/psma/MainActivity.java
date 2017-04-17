@@ -1,18 +1,20 @@
 package capstones17_24.psma;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.media.AudioFormat;
 import android.media.AudioRecord;
 import android.os.StrictMode;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Base64;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.os.Environment;
@@ -20,9 +22,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.Random;
 import static android.Manifest.permission.RECORD_AUDIO;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
@@ -55,21 +57,27 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
      /*
-    TODO: 4/3/17, 4:37pm EDT
+    TODO: 4/3/17, 4:37pm EDT || 4/10/17, 4pm EDT || 4/16/17, 8:27pm EDT
+    TODO: 4/17/17, 12:13pm EDT
     TODO: Tackling addl todo's in this list as well as in Meeting Minutes 4/10/17
-            - add activity to record the voice
-        - add voice recording capabilities and persistence principles
-        - save as sound file, but test with message first)
-            - debug and refine
-        - app permissions, re-check
+        - add persistence principles (onPause, onExit, onResume, etc. to sharedPrefs)
         - refine layout/aesthetics and such
-        - debug and refine
+        - tweak Connection code to check BOTH receiving and sending (Dan Request: send as array/matrix)
+        - debug and refine (Loop-de-loop)
 
-            (done) change font of title - script is weird, yo
-            (done) remove login/create account and directly access feature
-            (done) integrate with MATLAB using TCP/IP sockets, Chall(FTP client)
-            (done) prep for presentation (unrelated to app design)
+        (done) change font of title - script is weird, yo
+        (done) remove login/create account and directly access feature
+        (done) integrate with MATLAB using TCP/IP sockets, Challenge(FTP client)
+        (done) prep for presentation (unrelated to app design)
+        (done) add activity screen to record the voice (changing to fragment, IF time permits)
+        (done) app permissions, re-check (NOTE: enable permissions on phone as well)
+        (done) add voice recording capabilities
+        (done) save as sound file (.pcm)
+
     */
+
+    //initialized global var holding BYTE representation of the sound recording
+    public static byte[] ByteVersionOfSound = null;
 
     private EditText clientIP_editText;
     public static String IP_Address;
@@ -136,7 +144,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Toast.makeText(this, "Attempting to connect...", Toast.LENGTH_SHORT).show();
                 //Toast.makeText(this, "Recording Cough", Toast.LENGTH_SHORT).show();
                 //myAudioRecorder.start();
-
+                Toast.makeText(this, "The byte array is: "+ByteVersionOfSound, Toast.LENGTH_LONG).show();
+                ByteVersionOfSound = find_my_byte();
                 mainFunction.execute();
 
                 break;
@@ -210,6 +219,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Button b = (Button) findViewById(R.id.LoginButton);
 
         IP_Address =  clientIP_editText.getText().toString();
+        //clientIP_editText.setText("");
 
         if(IP_Address.equals(""))
         {
@@ -220,6 +230,47 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             b.setEnabled(true);
         }
     }
+
+    /*
+    Termination and reopening related code (not closing)
+    */
+
+    public byte[] find_my_byte () {
+        SharedPreferences sPrefs = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
+        String stringArray = sPrefs.getString("ByteData", null);
+
+        if (stringArray != null) {
+            String[] split = stringArray.substring(1, stringArray.length()-1).split(", ");
+            ByteVersionOfSound = new byte[split.length];
+            for (int i = 0; i < split.length; i++) {
+                ByteVersionOfSound[i] = Byte.parseByte(split[i]);
+            }
+        }
+        //retrieving Byte array version of sound, right before it is converted to a pcm file
+        //ByteVersionOfSound = Base64.decode("bData", Base64.NO_WRAP);
+        return ByteVersionOfSound;
+    }
+    @Override
+    protected void onResume(){
+        super.onResume();
+        ByteVersionOfSound = find_my_byte();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        // do stuff here
+        ByteVersionOfSound = find_my_byte();
+    }
+
+    @Override
+    protected void onDestroy(){
+        super.onDestroy();
+        // do stuff here
+    }
+
+
+
 //--------------------------------------------------------------------------------------------
 
 

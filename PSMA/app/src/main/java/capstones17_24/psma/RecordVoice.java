@@ -1,20 +1,28 @@
 package capstones17_24.psma;
 
+import android.content.SharedPreferences;
 import android.media.AudioFormat;
 import android.media.AudioRecord;
 import android.media.MediaRecorder;
+import android.os.Environment;
+import android.os.SystemClock;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Base64;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Chronometer;
 
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Arrays;
 
 // borrowed from http://stackoverflow.com/questions/8499042/android-audiorecord-example
 // will be modified for refinement/tailoring to this Project
+
 
 public class RecordVoice extends AppCompatActivity {
 
@@ -24,6 +32,8 @@ public class RecordVoice extends AppCompatActivity {
     private AudioRecord recorder = null;
     private Thread recordingThread = null;
     private boolean isRecording = false;
+    private Chronometer myChronometer = null;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +45,8 @@ public class RecordVoice extends AppCompatActivity {
 
         int bufferSize = AudioRecord.getMinBufferSize(RECORDER_SAMPLERATE,
                 RECORDER_CHANNELS, RECORDER_AUDIO_ENCODING);
+
+         myChronometer = (Chronometer)findViewById(R.id.chronometer);
 /*
         Button clickStart = (Button) findViewById(R.id.Start);
         clickStart.setOnClickListener((View.OnClickListener) this);
@@ -45,7 +57,7 @@ public class RecordVoice extends AppCompatActivity {
 
     private void setButtonHandlers() {
         ((Button) findViewById(R.id.Start)).setOnClickListener(btnClick);
-        ((Button) findViewById(R.id.Stahp)).setOnClickListener(btnClick);
+        ((Button) findViewById(R.id.Stop)).setOnClickListener(btnClick);
     }
 
     private void enableButton(int id, boolean isEnable) {
@@ -54,7 +66,7 @@ public class RecordVoice extends AppCompatActivity {
 
     private void enableButtons(boolean isRecording) {
         enableButton(R.id.Start, !isRecording);
-        enableButton(R.id.Stahp, isRecording);
+        enableButton(R.id.Stop, isRecording);
     }
 
     int BufferElements2Rec = 1024; // want to play 2048 (2K) since 2 bytes we use only 1024
@@ -91,7 +103,7 @@ public class RecordVoice extends AppCompatActivity {
 
     private void writeAudioDataToFile() {
         // Write the output audio in byte
-
+        //String filePath = "/storage/emulated/0/Android/data/com.capstones17_24.psma/SeniorDesign001.pcm";
         String filePath = "/sdcard/SeniorDesign001.pcm";
         short sData[] = new short[BufferElements2Rec];
 
@@ -106,12 +118,25 @@ public class RecordVoice extends AppCompatActivity {
             // gets the voice output from microphone to byte format
 
             recorder.read(sData, 0, BufferElements2Rec);
-            System.out.println("Short wirting to file" + sData.toString());
+            System.out.println("Short writing to file" + sData.toString());
             try {
                 // // writes the data to file from buffer
                 // // stores the voice buffer
                 byte bData[] = short2byte(sData);
                 os.write(bData, 0, BufferElements2Rec * BytesPerElement);
+
+                // Jon Cheng -- 4/17/17, 13:33 EDT
+                // while writing bytes to applicable sound file, I'm storing raw byte in sharedPrefs
+                // SharedPrefs allows data to persist permanently in the app, and is retrievable
+                // throughout the activity screens when explicitly called by the name it was saved under...bruh
+                SharedPreferences sPrefs = PreferenceManager.getDefaultSharedPreferences(RecordVoice.this);
+
+                SharedPreferences.Editor sEdit = sPrefs.edit();
+                sEdit.putString("ByteData", Arrays.toString(bData));
+                //sEdit.putInt("size",bData.length);
+                sEdit.commit();
+
+
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -140,11 +165,14 @@ public class RecordVoice extends AppCompatActivity {
                 case R.id.Start: {
                     enableButtons(true);
                     startRecording();
+                    myChronometer.setBase(SystemClock.elapsedRealtime());
+                    myChronometer.start();
                     break;
                 }
-                case R.id.Stahp: {
+                case R.id.Stop: {
                     enableButtons(false);
                     stopRecording();
+                    myChronometer.stop();
                     break;
                 }
             }
