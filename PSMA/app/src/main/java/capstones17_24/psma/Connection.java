@@ -19,6 +19,7 @@ import static capstones17_24.psma.MainActivity.IP_Address;
 public class Connection extends AsyncTask {
 
     public static Socket clientSocket;
+    private OutputStream out;
 
     @Override
     protected Object doInBackground(Object... arg0) {
@@ -39,24 +40,6 @@ public class Connection extends AsyncTask {
             pw.flush();
             pw.close();*/
 
-            int len = ByteVersionOfSound.length;
-            int start = 0;
-
-            if (len < 0)
-                throw new IllegalArgumentException("Negative length not allowed");
-            if (start < 0 || start >= ByteVersionOfSound.length)
-                throw new IndexOutOfBoundsException("Out of bounds: " + start);
-            // Other checks if needed.
-
-            // May be better to save the streams in the support class;
-            // just like the socket variable.
-            OutputStream out = clientSocket.getOutputStream();
-            DataOutputStream dos = new DataOutputStream(out);
-
-            dos.write(ByteVersionOfSound, start, len);
-            dos.flush();
-            dos.close();
-
             //--------------------------------------------------------------
             // preparing to send message...
             //DataOutputStream dataOut = new DataOutputStream(clientSocket.getOutputStream());
@@ -67,6 +50,7 @@ public class Connection extends AsyncTask {
             //dataOut.writeUTF("Hello from Capstone S24!");
 
             // 4/17/17 -- WANT: to send byte array of the sound recording to MATLAB Server
+            // 4/17/17 - snippet below was not commented out when the whole chunk up^^ there were run
             sendBytes(ByteVersionOfSound);
 
             // OLD:
@@ -107,7 +91,7 @@ public class Connection extends AsyncTask {
 
         // May be better to save the streams in the support class;
         // just like the socket variable.
-        OutputStream out = clientSocket.getOutputStream();
+        out = clientSocket.getOutputStream();
         DataOutputStream dos = new DataOutputStream(out);
 
         if (len > 0) {
@@ -124,4 +108,11 @@ public class Connection extends AsyncTask {
 Resources
 http://stackoverflow.com/questions/5680259/using-sockets-to-send-and-receive-data
 http://stackoverflow.com/questions/2878867/how-to-send-an-array-of-bytes-over-a-tcp-connection-java-programming
+
+http://stackoverflow.com/questions/28150362/what-is-the-difference-between-byte-and-listbyte-in-java
+
+borrowed from http://stackoverflow.com/questions/8499042/android-audiorecord-example
+will be modified for refinement/tailoring to this Project
+
+http://stackoverflow.com/questions/20682865/disable-button-when-edit-text-fields-empty
  */

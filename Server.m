@@ -1,6 +1,6 @@
 %% MFCC
-    cough = audioread('audio4.wav');
-    mfcc = melcepst(cough);
+    %cough = audioread('audio4.wav');
+    %mfcc = melcepst(cough);
     
 %% Server
 t = tcpip('0.0.0.0', 8000, 'NetworkRole', 'Server');

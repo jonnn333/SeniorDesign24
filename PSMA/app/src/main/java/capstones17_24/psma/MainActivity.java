@@ -25,6 +25,7 @@ import android.widget.Button;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Random;
 import static android.Manifest.permission.RECORD_AUDIO;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
@@ -45,7 +46,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     // 4/12/17, 1pm EDT -- attemtping to get app to record audio...LIKE A BOSS
     // NOW: using AudioRecord built-in Android thing-a-ma-jig
-    // source: http://stackoverflow.com/questions/8499042/android-audiorecord-example
     /*
     NOTE: for the above, this is set up in RecordVoice Activity, will user will
     be taken to when he/she clicks on the button that says to "Record my Cough"
@@ -60,7 +60,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     TODO: 4/3/17, 4:37pm EDT || 4/10/17, 4pm EDT || 4/16/17, 8:27pm EDT
     TODO: 4/17/17, 12:13pm EDT
     TODO: Tackling addl todo's in this list as well as in Meeting Minutes 4/10/17
-        - add persistence principles (onPause, onExit, onResume, etc. to sharedPrefs)
+        - MOTHER-FATHER FIX THE CONNECTION ERROR (4/17/17)
         - refine layout/aesthetics and such
         - tweak Connection code to check BOTH receiving and sending (Dan Request: send as array/matrix)
         - debug and refine (Loop-de-loop)
@@ -73,6 +73,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         (done) app permissions, re-check (NOTE: enable permissions on phone as well)
         (done) add voice recording capabilities
         (done) save as sound file (.pcm)
+        (done) add persistence principles (onPause, onExit, onResume, etc. to sharedPrefs)
 
     */
 
@@ -145,7 +146,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 //Toast.makeText(this, "Recording Cough", Toast.LENGTH_SHORT).show();
                 //myAudioRecorder.start();
                 Toast.makeText(this, "The byte array is: "+ByteVersionOfSound, Toast.LENGTH_LONG).show();
-                ByteVersionOfSound = find_my_byte();
+                //find_my_byte();
+
                 mainFunction.execute();
 
                 break;
@@ -177,6 +179,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 //EditText editText = (EditText) findViewById(R.id.editText);
                 //String message = editText.getText().toString();
                 //intent.putExtra(EXTRA_MESSAGE, message);
+
                 startActivity(intent);
 
                 break;
@@ -192,7 +195,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 */
 
-   // http://stackoverflow.com/questions/20682865/disable-button-when-edit-text-fields-empty
     public void CreateAccountClick(View v) {
         Toast.makeText(this, "Clicked on the Account Creation Button!", Toast.LENGTH_LONG).show();
     }
@@ -235,32 +237,52 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     Termination and reopening related code (not closing)
     */
 
-    public byte[] find_my_byte () {
-        SharedPreferences sPrefs = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
-        String stringArray = sPrefs.getString("ByteData", null);
+    public void find_my_byte () {
+        //SharedPreferences sPrefs = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
+        //String stringArray = sPrefs.getString("ByteData", null);
+        //ByteVersionOfSound = RecordVoice.getBytes(this);
 
-        if (stringArray != null) {
-            String[] split = stringArray.substring(1, stringArray.length()-1).split(", ");
-            ByteVersionOfSound = new byte[split.length];
-            for (int i = 0; i < split.length; i++) {
-                ByteVersionOfSound[i] = Byte.parseByte(split[i]);
-            }
+        SharedPreferences sPrefs = getSharedPreferences("ByteData", MODE_PRIVATE);
+        String str = sPrefs.getString("arrayOfBytes", null);
+        if (str != null) {
+            ByteVersionOfSound = str.getBytes(StandardCharsets.UTF_16);
+
+            Toast.makeText(this, "First Byte is: "+ByteVersionOfSound[0], Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Second Byte is: "+ByteVersionOfSound[1], Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Third Byte is: "+ByteVersionOfSound[2], Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Twentieth Byte is: "+ByteVersionOfSound[19], Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Size of Byte Array to send: "+ByteVersionOfSound.length, Toast.LENGTH_SHORT).show();
         }
-        //retrieving Byte array version of sound, right before it is converted to a pcm file
-        //ByteVersionOfSound = Base64.decode("bData", Base64.NO_WRAP);
-        return ByteVersionOfSound;
+
+       // if (ByteVersionOfSound != null) {
+
+            //Toast.makeText(this, "SharedPrefs is accessed!", Toast.LENGTH_SHORT).show();
+            //String[] split = stringArray.substring(0, stringArray.length()-1).split(", ");
+            //ByteVersionOfSound = new byte[split.length];
+            //for (int i = 0; i < split.length; i++) {
+                // as long as the element we iterate over isn't just a blank space (T-Swizzle)
+                // NOTE: need this because combining multiple byte arrays and need to remove [] when
+                // putting them together
+             //   if (!split[i].equals(" ")) {
+             //       ByteVersionOfSound[i] = Byte.parseByte(split[i]);
+             //   }
+            //}
+
+
+       // }
+
     }
     @Override
     protected void onResume(){
         super.onResume();
-        ByteVersionOfSound = find_my_byte();
+        find_my_byte();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         // do stuff here
-        ByteVersionOfSound = find_my_byte();
+        //find_my_byte();
     }
 
     @Override
