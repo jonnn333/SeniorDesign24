@@ -1,6 +1,20 @@
 %% MFCC
-    %cough = audioread('audio4.wav');
-    %mfcc = melcepst(cough);
+% Voicebox obtained from: http://www.ee.ic.ac.uk/hp/staff/dmb/voicebox/voicebox.html
+    [y, Fs] = audioread('audio4.wav');
+    N = length(y);
+    t = linspace(0, N/Fs, N);
+    subplot(2,1,1);
+    plot(t,y);
+    title('Raw Cough Signal');
+    xlabel('Time (s)');
+    ylabel('Amplitude (dB)');
+    
+    subplot(2,1,2);
+    [c, tc] = melcepst(y, 44100);
+    plot(tc, c);
+    title('Mel Frequency Cepstral Coefficients');
+    xlabel('Frequency (Hz)');
+    ylabel('Mel Coefficients');  
     
 %% Server
 t = tcpip('0.0.0.0', 8000, 'NetworkRole', 'Server');
