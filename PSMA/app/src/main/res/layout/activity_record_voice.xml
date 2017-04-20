@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="capstones17_24.psma.RecordVoice">
+
+    <ImageView
+        android:layout_width="0dp"
+        android:layout_height="320dp"
+        android:src="@drawable/capture"
+        android:visibility="visible"
+        android:id="@+id/microphonePic"
+        app:layout_constraintBottom_toBottomOf="@+id/chronometer"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.3" />
+
+    <Button
+        android:layout_width="225dp"
+        android:layout_height="50dp"
+        android:text="Start Recording"
+        android:id="@+id/Start"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:onClick="StartRec"
+        app:layout_constraintVertical_bias="0.8"
+        />
+
+    <Button
+        android:layout_width="225dp"
+        android:layout_height="50dp"
+        android:text="Stop Recording"
+        android:id="@+id/Stop"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:onClick="StopRec"
+        app:layout_constraintVertical_bias="0.9"
+        />
+
+    <Chronometer
+        android:id="@+id/chronometer"
+        android:layout_width="100dp"
+        android:layout_height="30dp"
+        android:textAlignment="center"
+        android:textSize="18sp"
+        android:typeface="monospace"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.71" />
+
+
+</android.support.constraint.ConstraintLayout>
