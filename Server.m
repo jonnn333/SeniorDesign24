@@ -14,14 +14,19 @@
     plot(tc, c);
     title('Mel Frequency Cepstral Coefficients');
     xlabel('Frequency (Hz)');
-    ylabel('Mel Coefficients');  
+    ylabel('Mel Coefficients');    
+
     
 %% Server
-t = tcpip('0.0.0.0', 8000, 'NetworkRole', 'Server');
+    t = tcpip('0.0.0.0', 8000, 'NetworkRole', 'Server');
+    set(t, 'InputBufferSize', 1000); 
 
-fprintf('Waiting for Client... \n');
-fopen(t);
-fprintf('Client Connected! \n');
+% Idle until connection is established
+    fprintf('------Capstone S17-24------\n');
+    fprintf('Waiting for Client... \n');
+    fopen(t);
+    fprintf('Client Connected! \n');
+    fprintf('Waiting for Data...\n');
 
 messages = 0;
 timer = 0;
