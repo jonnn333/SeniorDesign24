@@ -16,7 +16,6 @@ import android.view.ViewGroup;
  * to handle interaction events.
  * Use the {@link resultsPage#newInstance} factory method to
  * create an instance of this fragment.
- *
  */
 public class resultsPage extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
@@ -29,6 +28,11 @@ public class resultsPage extends Fragment {
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
+
+    public resultsPage() {
+        // Required empty public constructor
+
+    }
 
     /**
      * Use this factory method to create a new instance of
@@ -47,9 +51,6 @@ public class resultsPage extends Fragment {
         fragment.setArguments(args);
         return fragment;
     }
-    public resultsPage() {
-        // Required empty public constructor
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -58,6 +59,7 @@ public class resultsPage extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
     }
 
     @Override

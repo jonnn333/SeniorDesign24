@@ -97,14 +97,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //tv.setText(stringFromJNI());
 
         // editText field for entering IP Address
-        clientIP_editText = (EditText) findViewById(R.id.editTextIP);
+        //clientIP_editText = (EditText) findViewById(R.id.editTextIP);
         //set listeners
-        clientIP_editText.addTextChangedListener(textWatcher);
+        //clientIP_editText.addTextChangedListener(textWatcher);
         // run once to disable if empty
         checkFieldsForEmptyValues();
 
-        Button clickButton = (Button) findViewById(R.id.LoginButton);
-        clickButton.setOnClickListener(this);
+        //Button clickButton = (Button) findViewById(R.id.LoginButton);
+        //clickButton.setOnClickListener(this);
         Button clickAbout = (Button) findViewById(R.id.AboutClick);
         clickAbout.setOnClickListener(this);
         Button clickFAQs = (Button) findViewById(R.id.FAQS_Click);
@@ -135,13 +135,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     //----------------------------------------------------------------------------------------
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.LoginButton: {
+            /*case R.id.LoginButton: {
                 Connection mainFunction = new Connection();
-                /*try {
+                *//*try {
                     mainFunction.execute();
                 } catch (IOException e) {
                     e.printStackTrace();
-                }*/
+                }*//*
                 Toast.makeText(this, "Attempting to connect...", Toast.LENGTH_SHORT).show();
                 //Toast.makeText(this, "Recording Cough", Toast.LENGTH_SHORT).show();
                 //myAudioRecorder.start();
@@ -151,7 +151,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 mainFunction.execute();
 
                 break;
-            }
+            }*/
             case R.id.AboutClick: {
                 // go to About Us activity
                 Toast.makeText(this, "You clicked the 'About Us' button", Toast.LENGTH_SHORT).show();
@@ -218,19 +218,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     };
 
     private  void checkFieldsForEmptyValues(){
-        Button b = (Button) findViewById(R.id.LoginButton);
+        //Button b = (Button) findViewById(R.id.LoginButton);
 
-        IP_Address =  clientIP_editText.getText().toString();
+        //IP_Address =  clientIP_editText.getText().toString();
         //clientIP_editText.setText("");
-
+/*
         if(IP_Address.equals(""))
         {
-            b.setEnabled(false);
+            //b.setEnabled(false);
         }
 
         else if(!IP_Address.equals("")){
-            b.setEnabled(true);
-        }
+            //b.setEnabled(true);
+        }*/
     }
 
     /*
