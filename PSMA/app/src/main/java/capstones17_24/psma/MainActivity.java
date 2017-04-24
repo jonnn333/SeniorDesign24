@@ -57,11 +57,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
      /*
-    TODO: 4/3/17, 4:37pm EDT || 4/10/17, 4pm EDT || 4/16/17, 8:27pm EDT
-    TODO: 4/17/17, 12:13pm EDT
+    TODO: 4/3/17, 4:37pm EDT || 4/10/17, 4pm EDT || 4/16/17, 8:27pm EDT || 4/17/17, 12:13pm EDT
+    TODO: 4/23/17, 6:41pm EDT
     TODO: Tackling addl todo's in this list as well as in Meeting Minutes 4/10/17
-        - MOTHER-FATHER FIX THE CONNECTION ERROR (4/17/17)
-        - refine layout/aesthetics and such
+        - debug encoding error with array of bytes (pcm should be unchanged and independent from this)
         - tweak Connection code to check BOTH receiving and sending (Dan Request: send as array/matrix)
         - debug and refine (Loop-de-loop)
 
@@ -72,8 +71,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         (done) add activity screen to record the voice (changing to fragment, IF time permits)
         (done) app permissions, re-check (NOTE: enable permissions on phone as well)
         (done) add voice recording capabilities
-        (done) save as sound file (.pcm)
+        (done) save as sound file (.pcm) [but not being used :( ]
         (done) add persistence principles (onPause, onExit, onResume, etc. to sharedPrefs)
+        (done) Fix connection error (4/17/2017)
+        (done) refine layout/aesthetics and such
 
     */
 
@@ -82,6 +83,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private EditText clientIP_editText;
     public static String IP_Address;
+
+    public static String StringOfBytes = null;
 
     // we always need this to start the app given the fact that it is an activity screen
     @Override
@@ -97,14 +100,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //tv.setText(stringFromJNI());
 
         // editText field for entering IP Address
-        //clientIP_editText = (EditText) findViewById(R.id.editTextIP);
+        clientIP_editText = (EditText) findViewById(R.id.editTextIP);
         //set listeners
-        //clientIP_editText.addTextChangedListener(textWatcher);
+        clientIP_editText.addTextChangedListener(textWatcher);
         // run once to disable if empty
         checkFieldsForEmptyValues();
 
-        //Button clickButton = (Button) findViewById(R.id.LoginButton);
-        //clickButton.setOnClickListener(this);
+        Button LoginButton = (Button) findViewById(R.id.LoginButton);
+        LoginButton.setOnClickListener(this);
         Button clickAbout = (Button) findViewById(R.id.AboutClick);
         clickAbout.setOnClickListener(this);
         Button clickFAQs = (Button) findViewById(R.id.FAQS_Click);
@@ -135,23 +138,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     //----------------------------------------------------------------------------------------
     public void onClick(View v) {
         switch (v.getId()) {
-            /*case R.id.LoginButton: {
+            case R.id.LoginButton: {
                 Connection mainFunction = new Connection();
-                *//*try {
+                /*try {
                     mainFunction.execute();
                 } catch (IOException e) {
                     e.printStackTrace();
-                }*//*
+                }*/
                 Toast.makeText(this, "Attempting to connect...", Toast.LENGTH_SHORT).show();
                 //Toast.makeText(this, "Recording Cough", Toast.LENGTH_SHORT).show();
                 //myAudioRecorder.start();
-                Toast.makeText(this, "The byte array is: "+ByteVersionOfSound, Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "The byte array is: "+ByteVersionOfSound, Toast.LENGTH_SHORT).show();
                 //find_my_byte();
 
                 mainFunction.execute();
 
                 break;
-            }*/
+            }
             case R.id.AboutClick: {
                 // go to About Us activity
                 Toast.makeText(this, "You clicked the 'About Us' button", Toast.LENGTH_SHORT).show();
@@ -164,7 +167,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
             case R.id.TermsClick: {
                 // go to Terms and Conditions page
-                Toast.makeText(this, "You clicked the 'Terms and Conditions' button", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "You clicked the T's & C's button", Toast.LENGTH_SHORT).show();
                 break;
             }
             case R.id.HelpClick: {
@@ -217,20 +220,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     };
 
-    private  void checkFieldsForEmptyValues(){
-        //Button b = (Button) findViewById(R.id.LoginButton);
+    private void checkFieldsForEmptyValues(){
+        Button b = (Button) findViewById(R.id.LoginButton);
 
-        //IP_Address =  clientIP_editText.getText().toString();
+        IP_Address =  clientIP_editText.getText().toString();
         //clientIP_editText.setText("");
-/*
+
         if(IP_Address.equals(""))
         {
-            //b.setEnabled(false);
+            b.setEnabled(false);
         }
 
         else if(!IP_Address.equals("")){
-            //b.setEnabled(true);
-        }*/
+            b.setEnabled(true);
+        }
     }
 
     /*
@@ -245,31 +248,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         SharedPreferences sPrefs = getSharedPreferences("ByteData", MODE_PRIVATE);
         String str = sPrefs.getString("arrayOfBytes", null);
         if (str != null) {
-            ByteVersionOfSound = str.getBytes(StandardCharsets.UTF_16);
+            ByteVersionOfSound = str.getBytes(StandardCharsets.UTF_8);
+            StringOfBytes = str;
 
             Toast.makeText(this, "First Byte is: "+ByteVersionOfSound[0], Toast.LENGTH_SHORT).show();
             Toast.makeText(this, "Second Byte is: "+ByteVersionOfSound[1], Toast.LENGTH_SHORT).show();
             Toast.makeText(this, "Third Byte is: "+ByteVersionOfSound[2], Toast.LENGTH_SHORT).show();
             Toast.makeText(this, "Twentieth Byte is: "+ByteVersionOfSound[19], Toast.LENGTH_SHORT).show();
-            Toast.makeText(this, "Size of Byte Array to send: "+ByteVersionOfSound.length, Toast.LENGTH_SHORT).show();
+            //Toast.makeText(this, "Size of Byte Array to send: "+ByteVersionOfSound.length, Toast.LENGTH_SHORT).show();
         }
-
-       // if (ByteVersionOfSound != null) {
-
-            //Toast.makeText(this, "SharedPrefs is accessed!", Toast.LENGTH_SHORT).show();
-            //String[] split = stringArray.substring(0, stringArray.length()-1).split(", ");
-            //ByteVersionOfSound = new byte[split.length];
-            //for (int i = 0; i < split.length; i++) {
-                // as long as the element we iterate over isn't just a blank space (T-Swizzle)
-                // NOTE: need this because combining multiple byte arrays and need to remove [] when
-                // putting them together
-             //   if (!split[i].equals(" ")) {
-             //       ByteVersionOfSound[i] = Byte.parseByte(split[i]);
-             //   }
-            //}
-
-
-       // }
 
     }
     @Override
@@ -289,6 +276,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onDestroy(){
         super.onDestroy();
         // do stuff here
+        Toast.makeText(this, "Bruh, why you leavin'?!", Toast.LENGTH_SHORT).show();
     }
 
 
