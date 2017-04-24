@@ -1,6 +1,6 @@
 package capstones17_24.psma;
 
-/**
+/*
  * Created by Jon on 4/3/2017.
  * Attempts to connect to MATLAB server while Dan is running one -- Works!
  */
@@ -18,7 +18,7 @@ import static capstones17_24.psma.MainActivity.IP_Address;
 
 public class Connection extends AsyncTask {
 
-    public static Socket clientSocket;
+    private static Socket clientSocket;
     private OutputStream out;
 
     @Override
@@ -72,17 +72,17 @@ public class Connection extends AsyncTask {
         }
 
         catch (Exception  e) {
-
+            e.printStackTrace();
         }
         return null;
     }
 
-    public void sendBytes(byte[] myByteArray) throws IOException {
+    private void sendBytes(byte[] myByteArray) throws IOException {
         sendBytes(myByteArray, 0, myByteArray.length);
     }
 
 
-    public void sendBytes(byte[] myByteArray, int start, int len) throws IOException {
+    private void sendBytes(byte[] myByteArray, int start, int len) throws IOException {
         if (len < 0)
             throw new IllegalArgumentException("Negative length not allowed");
         if (start < 0 || start >= myByteArray.length)
@@ -95,7 +95,8 @@ public class Connection extends AsyncTask {
         DataOutputStream dos = new DataOutputStream(out);
 
         if (len > 0) {
-            dos.write(myByteArray, start, len);
+            //dos.write(myByteArray, start, len);
+            dos.writeUTF(MainActivity.StringOfBytes);
         }
         dos.flush();
         dos.close();

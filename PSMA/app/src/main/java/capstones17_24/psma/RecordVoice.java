@@ -81,6 +81,7 @@ public class RecordVoice extends AppCompatActivity {
         enableButton(R.id.Stop, isRecording);
     }
 
+    // Google up on this information... 4/23
     int BufferElements2Rec = 1024; // want to play 2048 (2K) since 2 bytes we use only 1024
     int BytesPerElement = 2; // 2 bytes in 16bit format
 
@@ -162,7 +163,7 @@ public class RecordVoice extends AppCompatActivity {
                     // open up arrayOfBytes and get the String-->bytes format
                     String tempString = sPrefs.getString("arrayOfBytes", null);
                     if (tempString != null ) {
-                        oldBytes = tempString.getBytes(StandardCharsets.UTF_16);
+                        oldBytes = tempString.getBytes(StandardCharsets.UTF_8);
                     }
 
                     // format to combine 2 arrays using arraycopy
@@ -184,7 +185,7 @@ public class RecordVoice extends AppCompatActivity {
                     System.arraycopy(bData, 0, combined, oldBytes.length, bData.length);
 
                     Toast.makeText(this, "Element 3 of combined array is: "+combined[2], Toast.LENGTH_SHORT).show();
-                    edit.putString("arrayOfBytes", new String(combined, StandardCharsets.UTF_16));
+                    edit.putString("arrayOfBytes", new String(combined, StandardCharsets.UTF_8));
 
                     // save changes
                     edit.commit();
@@ -193,7 +194,7 @@ public class RecordVoice extends AppCompatActivity {
                 else {
                     SharedPreferences.Editor edit = sPrefs.edit();
                     // first run, just add bData to the ByteData-->arrayOfBytes SharedPrefs as a string
-                    edit.putString("arrayOfBytes", new String(bData, StandardCharsets.UTF_16));
+                    edit.putString("arrayOfBytes", new String(bData, StandardCharsets.UTF_8));
 
                     // save changes
                     edit.commit();
