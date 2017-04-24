@@ -36,7 +36,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.270"
         />
-<!--
+
     <Button
         android:layout_width="225dp"
         android:layout_height="50dp"
@@ -48,7 +48,7 @@
         app:layout_constraintTop_toTopOf="parent"
         android:onClick="LoginClick"
         />
--->
+
     <Button
         android:layout_width="225dp"
         android:layout_height="50dp"
@@ -124,7 +124,7 @@
         app:layout_constraintHorizontal_bias="1"
         app:layout_constraintVertical_bias="1.0"
         android:id="@+id/HelpClick"/>
-<!--
+
     <EditText
         android:id="@+id/editTextIP"
         android:layout_width="wrap_content"
@@ -141,6 +141,5 @@
         app:layout_constraintVertical_bias="0.39999998"
         android:textAlignment="center"
         android:layout_marginBottom="-1dp" />
--->
 
 </android.support.constraint.ConstraintLayout>
