@@ -95,8 +95,7 @@ public class Connection extends AsyncTask {
         DataOutputStream dos = new DataOutputStream(out);
 
         if (len > 0) {
-            //dos.write(myByteArray, start, len);
-            dos.writeUTF(MainActivity.StringOfBytes);
+            dos.write(myByteArray, start, len);
         }
         dos.flush();
         dos.close();

@@ -34,12 +34,20 @@ import java.util.List;
 
 public class RecordVoice extends AppCompatActivity {
 
-    private static final int RECORDER_SAMPLERATE = 44100; // for emulator; recomm 44100 for real phone
+    private static final int RECORDER_SAMPLERATE = 44100; // 8000 for emulator; recomm 44100 for real phone
+
+    // means that it just uses a single channel for audio signal
     private static final int RECORDER_CHANNELS = AudioFormat.CHANNEL_IN_MONO;
+
+    // Audio data format: PCM 16 bit per sample. Guaranteed to be supported by devices.
     private static final int RECORDER_AUDIO_ENCODING = AudioFormat.ENCODING_PCM_16BIT;
+
+    // initializing AudioRecord class, a thread for it to run on, boolean to check if it is recording
     private AudioRecord recorder = null;
     private Thread recordingThread = null;
     private boolean isRecording = false;
+
+    // initializing TIMER
     private Chronometer myChronometer = null;
 
     private byte[] oldToNewByteArray = null;
@@ -56,15 +64,6 @@ public class RecordVoice extends AppCompatActivity {
                 RECORDER_CHANNELS, RECORDER_AUDIO_ENCODING);
 
          myChronometer = (Chronometer)findViewById(R.id.chronometer);
-/*
-        Button clickStart = (Button) findViewById(R.id.Start);
-        clickStart.setOnClickListener((View.OnClickListener) this);
-        Button clickStop = (Button) findViewById(R.id.Stahp);
-        clickStop.setOnClickListener((View.OnClickListener) this);
-*/
-
-        //SharedPreferences sPrefs = PreferenceManager.getDefaultSharedPreferences(RecordVoice.this);
-        //SharedPreferences.Editor sEdit = sPrefs.edit();
     }
 
     private void setButtonHandlers() {
@@ -163,7 +162,7 @@ public class RecordVoice extends AppCompatActivity {
                     // open up arrayOfBytes and get the String-->bytes format
                     String tempString = sPrefs.getString("arrayOfBytes", null);
                     if (tempString != null ) {
-                        oldBytes = tempString.getBytes(StandardCharsets.UTF_8);
+                        oldBytes = tempString.getBytes(StandardCharsets.UTF_16);
                     }
 
                     // format to combine 2 arrays using arraycopy
@@ -185,111 +184,22 @@ public class RecordVoice extends AppCompatActivity {
                     System.arraycopy(bData, 0, combined, oldBytes.length, bData.length);
 
                     Toast.makeText(this, "Element 3 of combined array is: "+combined[2], Toast.LENGTH_SHORT).show();
-                    edit.putString("arrayOfBytes", new String(combined, StandardCharsets.UTF_8));
+                    edit.putString("arrayOfBytes", new String(combined, StandardCharsets.UTF_16));
 
                     // save changes
-                    edit.commit();
+                    edit.apply();
                 }
 
+                // else, write to it for the first time ev'uh
                 else {
                     SharedPreferences.Editor edit = sPrefs.edit();
                     // first run, just add bData to the ByteData-->arrayOfBytes SharedPrefs as a string
-                    edit.putString("arrayOfBytes", new String(bData, StandardCharsets.UTF_8));
+                    edit.putString("arrayOfBytes", new String(bData, StandardCharsets.UTF_16));
 
                     // save changes
-                    edit.commit();
+                    edit.apply();
                 }
 
-
-                //edit.apply();
-
-               // if ( sPrefs.contains("ByteData") ) {
-
-                    /*
-
-                    TinyDB OpenAndEdit = new TinyDB(this);
-                    Object IntermediateList = OpenAndEdit.getObject("ByteData", Object.class);
-                    ArrayList<Byte> currArrayOfBytes = (ArrayList) IntermediateList;
-
-                    for (int itr = 0; itr < bData.length - 1; itr++) {
-                        currArrayOfBytes.add(bData[itr]);
-                    }
-
-                    OpenAndEdit.putObject("ByteData", currArrayOfBytes);
-                    */
-
-                    /*
-                    // append
-                    Gson gsonReceiver = new Gson();
-                    String currentValue = sPrefs.getString("ByteData", null);
-
-                    // identify type and convert back to an ArrayList of string
-                    Type type = new TypeToken<List<String>>(){}.getType();
-                    ArrayList<String> ByteArrayString = gsonReceiver.fromJson(currentValue,type);
-
-                    // convert back to actual byte values in the array
-                    ArrayList<Byte> byteRep = new ArrayList<>();
-
-                    // before performing any operations, ensure that ByteArrayString isn't null
-                    if (ByteArrayString != null) {
-                        for (String value : ByteArrayString) {
-                            // parse string of bytes in the decimal form
-                            byteRep.add((byte) Byte.parseByte(value, 10));
-                        }
-
-                        // need to...loop :( in order to add every element in bData into ArrayList
-                        for (int itr = 0; itr < bData.length - 1; itr++) {
-                            byteRep.add(bData[itr]);
-                        }
-
-                        // convert back to string array, then prepare commit/apply to SharedPreferences
-                        ByteArrayString = new ArrayList<String>(Integer.parseInt(byteRep.toString()));
-                        String actualJson = gsonReceiver.toJson(ByteArrayString);
-                        sEdit.putString("ByteData", actualJson);
-                    }
-                    */
-
-                //}
-                //else {
-
-                    /*
-                    ArrayList<Byte> ImpressiveArray = new ArrayList<>();
-
-                    for (int itr = 0; itr < bData.length-1; itr++) {
-                        ImpressiveArray.add(bData[itr]);
-                    }
-                    TinyDB compressByteArray = new TinyDB(this);
-                    compressByteArray.putObject("ByteData", ImpressiveArray);
-                    */
-
-                    /*
-                    // create it for the first time and commit
-                    // converting to arrayList for dynamic memory/space allocation; array is too rigid
-                    ArrayList<Byte> ImpressiveArray = new ArrayList<>();
-                    ArrayList<String> textList = new ArrayList<>();
-
-                    // need to...loop :( in order to add every element in bData into ArrayList
-                    // makes it easier since ArrayList is more versatile
-                    for (int itr = 0; itr < bData.length-1; itr++) {
-                        ImpressiveArray.add(bData[itr]);
-                    }
-
-                    // loop through ArrayList of Bytes and convert it to ArrayList of String
-                    for (int stuff : ImpressiveArray) {
-                        textList.add(ImpressiveArray.get(stuff).toString());
-                    }
-
-                    Gson gson = new Gson();
-                    String jsonText = gson.toJson(textList);
-
-                    sEdit.putString("ByteData", jsonText);
-                    */
-                //}
-
-
-                // using .apply instead of .commit, as suggested by Android Intellij IDE
-                // because apply saves info in background whereas commit instantaneouly saves
-                //sEdit.apply();
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -342,22 +252,6 @@ public class RecordVoice extends AppCompatActivity {
         return super.onKeyDown(keyCode, event);
     }
 
-    // byte-related functions for saving/loading
-    public static byte[] getBytes(Context context) {
-        //SharedPreferences sPrefs = context.getSharedPreferences("ByteData", context.MODE_PRIVATE);
-        //String str = sPrefs.getString("arrayOfBytes", null);
-        //if (str != null) {
-        //    return str.getBytes(StandardCharsets.UTF_16);
-        //}
-        return null;
-    }
-
-    public static void setBytes(Context context, byte[] bytes) {
-        //SharedPreferences sPrefs = context.getSharedPreferences("ByteData", context.MODE_PRIVATE);
-        //SharedPreferences.Editor edit = sPrefs.edit();
-        //edit.putString("arrayOfBytes", new String(bytes, StandardCharsets.UTF_16));
-        //edit.apply();
-    }
 
     public void clear(Context context) {
         SharedPreferences prefs = getSharedPreferences("ByteData", context.MODE_PRIVATE);

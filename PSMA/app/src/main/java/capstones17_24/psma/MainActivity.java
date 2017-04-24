@@ -106,6 +106,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         // run once to disable if empty
         checkFieldsForEmptyValues();
 
+        SharedPreferences saveIP = getSharedPreferences("IP_address_store", 0);
+        clientIP_editText.setText(saveIP.getString("storedIP", IP_Address));
+
         Button LoginButton = (Button) findViewById(R.id.LoginButton);
         LoginButton.setOnClickListener(this);
         Button clickAbout = (Button) findViewById(R.id.AboutClick);
@@ -248,7 +251,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         SharedPreferences sPrefs = getSharedPreferences("ByteData", MODE_PRIVATE);
         String str = sPrefs.getString("arrayOfBytes", null);
         if (str != null) {
-            ByteVersionOfSound = str.getBytes(StandardCharsets.UTF_8);
+            ByteVersionOfSound = str.getBytes(StandardCharsets.UTF_16);
             StringOfBytes = str;
 
             Toast.makeText(this, "First Byte is: "+ByteVersionOfSound[0], Toast.LENGTH_SHORT).show();
@@ -277,6 +280,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onDestroy();
         // do stuff here
         Toast.makeText(this, "Bruh, why you leavin'?!", Toast.LENGTH_SHORT).show();
+
+        SharedPreferences saveIP = getSharedPreferences("IP_address_store", 0);
+        SharedPreferences.Editor edit = saveIP.edit();
+        // first run, just add bData to the ByteData-->arrayOfBytes SharedPrefs as a string
+        edit.putString("storedIP", IP_Address);
+        edit.apply();
+
     }
 
 

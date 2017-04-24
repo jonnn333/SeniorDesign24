@@ -31,9 +31,12 @@
 messages = 0;
 timer = 0;
 
+% Allows MATLAB to utilize UTF8 format from now on. 
+feature('DefaultCharacterSet', 'UTF8')
+
 while t.status == 'open'
     if t.BytesAvailable > 0
-        message = fread(t, t.BytesAvailable, "UTF-8");
+        message = fread(t, hex2dec(t.BytesAvailable), '2*UTF-16', 2);
         break
     else
         fprintf('Waiting for Message...\n');
